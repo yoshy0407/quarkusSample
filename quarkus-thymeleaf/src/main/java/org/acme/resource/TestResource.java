@@ -2,7 +2,6 @@ package org.acme.resource;
 
 import java.time.LocalDate;
 
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -10,22 +9,21 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.acme.resource.PersonForm.Status;
-import org.acme.thymeleaf.ThymeleafRenderer;
-import org.jboss.resteasy.plugins.providers.html.Renderable;
+import org.acme.thymeleaf.RenderThymeleaf;
+import org.acme.thymeleaf.View;
 
-@Path("/person")
-public class PersonResource {
+@Path("test")
+public class TestResource {
 
-	@Inject
-	public ThymeleafRenderer views;
-	
     @GET
     @Path("/{name}")
     @Produces(MediaType.TEXT_HTML)
-    public Renderable getHTML(@PathParam("name") String name) {
-        return views
-            .view("person.html")
-            .with("p", createPerson(name));
+    @RenderThymeleaf
+    public View getHTML(@PathParam("name") String name) {
+        View view = new View();
+    	view.setViewName("person.html");
+    	view.setParam("p", createPerson(name));
+    	return view;
     }
 
     protected PersonForm createPerson(String name) {
@@ -35,6 +33,5 @@ public class PersonResource {
     	form.status = Status.Alive;
     	return form;
     }
-	
 	
 }
